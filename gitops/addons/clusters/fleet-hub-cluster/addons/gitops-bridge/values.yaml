@@ -7,17 +7,19 @@ addons:
   metrics_server:
     enabled: true
   karpenter:
-    enabled: true
+    enabled: false
   kyverno:
+    enabled: true
+  nirmata_cluster_registrator:
     enabled: true
   external_secrets:
     enabled: true
   cni_metrics_helper:
     enabled: true
   cw_prometheus:
-    enabled: true
+    enabled: false
   grafana_operator:
-    enabled: true
+    enabled: false
   argocd:
     enabled: true # ArgoCD is enabled to replace the argocd installed at bootstrap time via terraform helm provider
   prometheus_node_exporter:
@@ -25,11 +27,11 @@ addons:
   kube_state_metrics:
     enabled: true
   adot_collector:
-    enabled: true
+    enabled: false
   opentelemetry_operator:
-    enabled: true
+    enabled: false
   cert_manager:
-    enabled: true
+    enabled: false
   eks_upgrade_insights_demo:
-    enabled: true
+    enabled: false
 

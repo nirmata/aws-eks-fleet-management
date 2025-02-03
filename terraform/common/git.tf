@@ -49,6 +49,12 @@ resource "aws_secretsmanager_secret" "git_secrets" {
   recovery_window_in_days = 0
 }
 
+resource "aws_secretsmanager_secret" "nirmata_secret" {
+  name                    = "${local.context_prefix}-nirmata-api-token"
+  recovery_window_in_days = 0
+}
+
+
 resource "aws_secretsmanager_secret_version" "git_secrets_version" {
   for_each  = aws_secretsmanager_secret.git_secrets
   secret_id = each.value.id
@@ -63,5 +69,10 @@ resource "aws_secretsmanager_secret_version" "git_secrets_version" {
     path        = local.gitops_repos[each.key].path
     revision    = local.gitops_repos[each.key].revision
   })
+}
+
+resource "aws_secretsmanager_secret_version" "nirmata_secret_version" {
+  secret_id     = aws_secretsmanager_secret.nirmata_secret.id
+  secret_string = var.nirmata_api_token
 }
 

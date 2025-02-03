@@ -1,7 +1,7 @@
 variable "project_context_prefix" {
   description = "Prefix for project"
   type        = string
-  default     = "eks-fleet-workshop-gitops"
+  default     = "eks-fleet-gitops"
 }
 
 variable "secret_name_ssh_secrets" {
@@ -12,72 +12,72 @@ variable "secret_name_ssh_secrets" {
 
 
 variable "gitops_fleet_repo_name" {
-  description = "Git repository name for addons"
-  default     = "eks-fleet-workshop-gitops-fleet"
+  description = "Git repository name for fleet"
+  default     = "aws-eks-fleet-management"
 }
 variable "gitops_fleet_basepath" {
-  description = "Git repository base path for addons"
-  default     = ""
+  description = "Git repository base path for fleet"
+  default     = "gitops/"
 }
 variable "gitops_fleet_path" {
-  description = "Git repository path for addons"
-  default     = "bootstrap"
+  description = "Git repository path for fleet"
+  default     = "fleet"
 }
 variable "gitops_fleet_revision" {
-  description = "Git repository revision/branch/ref for addons"
-  default     = "HEAD"
+  description = "Git repository revision/branch/ref for fleet"
+  default     = "feature/rev1"
 }
 
 variable "gitops_addons_repo_name" {
   description = "Git repository name for addons"
-  default     = "eks-fleet-workshop-gitops-addons"
+  default     = "aws-eks-fleet-management"
 }
 variable "gitops_addons_basepath" {
   description = "Git repository base path for addons"
-  default     = ""
+  default     = "gitops/addons/"
 }
 variable "gitops_addons_path" {
   description = "Git repository path for addons"
-  default     = "bootstrap"
+  default     = "addons"
 }
 variable "gitops_addons_revision" {
   description = "Git repository revision/branch/ref for addons"
-  default     = "HEAD"
+  default     = "feature/rev1"
 }
 
 variable "gitops_platform_repo_name" {
   description = "Git repository name for platform"
-  default     = "eks-fleet-workshop-gitops-platform"
+  default     = "aws-eks-fleet-management"
 }
 variable "gitops_platform_basepath" {
   description = "Git repository base path for platform"
-  default     = ""
+  default     = "gitops"
 }
 variable "gitops_platform_path" {
   description = "Git repository path for workload"
-  default     = "bootstrap"
+  default     = "platform"
 }
 variable "gitops_platform_revision" {
   description = "Git repository revision/branch/ref for workload"
-  default     = "HEAD"
+  default     = "feature/rev1"
 }
 
 
 variable "gitops_workload_repo_name" {
   description = "Git repository name for workload"
-  default     = "eks-fleet-workshop-gitops-apps"
+  default     = "aws-eks-fleet-management"
 }
 variable "gitops_workload_basepath" {
   description = "Git repository base path for workload"
-  default     = ""
+  default     = "gitops"
 }
 variable "gitops_workload_path" {
   description = "Git repository path for workload"
-  default     = ""
+  default     = "apps"
 }
 variable "gitops_workload_revision" {
   description = "Git repository revision/branch/ref for workload"
-  default     = "HEAD"
+  default     = "feature/rev1"
 }
 
 variable "ssm_parameter_name_argocd_role_suffix" {
@@ -104,7 +104,7 @@ variable "frontend_team_view_role_suffix" {
 variable "gitea_user" {
   description = "User to login on the Gitea instance"
   type = string
-  default = "workshop-user"
+  default = "nirmata"
 }
 variable "gitea_password" {
   description = "Password to login on the Gitea instance"
@@ -124,8 +124,38 @@ variable "gitea_repo_prefix" {
   default = "workshop-user/"
 }
 
+variable "nirmata_api_token" {
+  description = "NCH API Token"
+  type = string
+  default = ""
+}
+
 variable "create_github_repos" {
   description = "Create Github repos"
   type = bool
   default = false
+}
+
+variable "exclude_alerts" {
+  description = "exclude alerts for prometheus"
+  type = bool
+  default = true
+}
+
+variable "exclude_prometheus" {
+  description = "Exclude managed prometheus configurations"
+  type = bool
+  default = true
+}
+
+variable "exclude_recording_rules" {
+  description = "Exclude recording rules"
+  type = bool
+  default = true
+}
+
+variable "exclude_security_hub" {
+  description = "Exclude AWS security hub"
+  type = bool
+  default = true
 }

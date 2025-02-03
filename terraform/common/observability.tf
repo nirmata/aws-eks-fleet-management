@@ -7,6 +7,7 @@ locals{
 
 #Managed Prometheus workspace
 resource "aws_prometheus_workspace" "amp" {
+  count = var.exclude_prometheus ? 0 : 1
   alias = "fleet-hub"
   tags  = local.tags
 }
@@ -15,15 +16,17 @@ resource "aws_prometheus_workspace" "amp" {
 
 # Creating parameter for all clusters to read
 resource "aws_ssm_parameter" "amp_arn" {
+  count = var.exclude_prometheus ? 0 : 1
   name  = "${local.context_prefix}-${var.amazon_managed_prometheus_suffix}-arn"
   type  = "String"
-  value = aws_prometheus_workspace.amp.arn
+  value = aws_prometheus_workspace.amp[0].arn
 }
 
 resource "aws_ssm_parameter" "amp_prometheus_endpoint" {
+  count = var.exclude_prometheus ? 0 : 1
   name  = "${local.context_prefix}-${var.amazon_managed_prometheus_suffix}-endpoint"
   type  = "String"
-  value = aws_prometheus_workspace.amp.prometheus_endpoint
+  value = aws_prometheus_workspace.amp[0].prometheus_endpoint
 }
 
 # resource "aws_prometheus_scraper" "fleet-scraper" {
