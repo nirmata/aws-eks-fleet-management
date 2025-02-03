@@ -14,13 +14,14 @@ spec:
       selector:
         matchLabels:
           fleet_member: control-plane
+      # A key-value map for arbitrary parameters
       values:
         addonChart: gitops-bridge
   template:
     metadata:
       name: cluster-addons
       finalizers:
-      # This is here only for workshop purposes. In a real-world scenario, you should not use this
+      # This is here only for workshop purposes Argo CD application controller will perform a cascading delete of the Application's resources . In a real-world scenario, you should not use this
       - resources-finalizer.argocd.argoproj.io
     spec:
       project: default

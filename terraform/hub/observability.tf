@@ -1,4 +1,5 @@
 resource "aws_cloudwatch_dashboard" "cni-helper-cw-dashboard" {
+  count = var.enable_cloudwatch_dashboards ? 1 : 0
   dashboard_name = "Fleet_Management_Vpc_Cni"
   dashboard_body = replace(
     replace(file("cw-dashboard-vpc-cni.json"), "**aws_region**", local.region),
@@ -7,6 +8,7 @@ resource "aws_cloudwatch_dashboard" "cni-helper-cw-dashboard" {
 }
 
 resource "aws_cloudwatch_dashboard" "karpenter-cw-dashboard" {
+  count = var.enable_cloudwatch_dashboards ? 1 : 0
   dashboard_name = "Fleet_Management_Karpenter"
   dashboard_body = replace(
     replace(file("cw-dashboard-karpenter.json"), "**aws_region**", local.region),
@@ -15,6 +17,7 @@ resource "aws_cloudwatch_dashboard" "karpenter-cw-dashboard" {
 }
 
 resource "aws_cloudwatch_dashboard" "coredns-cw-dashboard" {
+  count = var.enable_cloudwatch_dashboards ? 1 : 0
   dashboard_name = "Fleet_Management_CoreDNS"
   dashboard_body = replace(
     replace(file("cw-dashboard-coredns.json"), "**aws_region**", local.region),
@@ -29,6 +32,7 @@ locals{
 }
 
 data "aws_ssm_parameter" "amp_arn" {
+  count = var.enable_prometheus ? 1 : 0
   name = "${local.context_prefix}-${var.amazon_managed_prometheus_suffix}-arn"
 }
 
@@ -44,7 +48,7 @@ resource "aws_prometheus_scraper" "fleet-scraper" {
   }
   destination {
     amp {
-       workspace_arn = data.aws_ssm_parameter.amp_arn.value
+       workspace_arn = data.aws_ssm_parameter.amp_arn[0].value
     }
   }
   alias = "fleet-hub"
@@ -76,17 +80,20 @@ resource "aws_prometheus_scraper" "fleet-scraper" {
 # Monitoring notifications
 ################################################################################
 resource "aws_sns_topic" "fleet-alerts" {
+  count = var.enable_notifications ? 1 : 0
   name = "fleet-alerts"
 }
 
 resource "aws_sqs_queue" "fleet_alerts_queue" {
+  count = var.enable_notifications ? 1 : 0
   name = "fleet_alerts"
 }
 
 resource "aws_sns_topic_subscription" "fleet_alerts_sqs_target" {
-  topic_arn = aws_sns_topic.fleet-alerts.arn
+  count = var.enable_notifications ? 1 : 0
+  topic_arn = aws_sns_topic.fleet-alerts[0].arn
   protocol  = "sqs"
-  endpoint  = aws_sqs_queue.fleet_alerts_queue.arn
+  endpoint  = aws_sqs_queue.fleet_alerts_queue[0].arn
 }
 
 ################################################################################
@@ -95,6 +102,7 @@ resource "aws_sns_topic_subscription" "fleet_alerts_sqs_target" {
 
 
 module "adot_collector_pod_identity" {
+  count = var.enable_adot ? 1 : 0
   source = "terraform-aws-modules/eks-pod-identity/aws"
   version = "~> 1.4.0"
 

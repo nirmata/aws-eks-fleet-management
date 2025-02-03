@@ -24,6 +24,12 @@ data "aws_secretsmanager_secret" "git_data_workload" {
 data "aws_secretsmanager_secret_version" "git_data_version_workload" {
   secret_id = data.aws_secretsmanager_secret.git_data_workload.id
 }
+data "aws_secretsmanager_secret" "nirmata_secret" {
+  name = var.secret_name_nirmata_api_token
+}
+data "aws_secretsmanager_secret_version" "nirmata_secret_version" {
+  secret_id = data.aws_secretsmanager_secret.nirmata_secret.id
+}
 
 locals {
   gitops_addons_url      = jsondecode(data.aws_secretsmanager_secret_version.git_data_version_addons.secret_string).url
@@ -60,5 +66,8 @@ locals {
   #gitops_workload_private_key = jsondecode(data.aws_secretsmanager_secret_version.git_data_version_workload.secret_string).private_key
   gitops_workload_repo_secret_key = var.secret_name_git_data_workloads
   gitops_workload_repo_username = jsondecode(data.aws_secretsmanager_secret_version.git_data_version_workload.secret_string).username
-  gitops_workload_repo_password = jsondecode(data.aws_secretsmanager_secret_version.git_data_version_workload.secret_string).password  
+  gitops_workload_repo_password = jsondecode(data.aws_secretsmanager_secret_version.git_data_version_workload.secret_string).password
+  # Nirmata API token for cluster regestration
+  nirmata_api_token_secret_key = var.secret_name_nirmata_api_token
+  nirmata_api_token = data.aws_secretsmanager_secret_version.nirmata_secret_version.secret_string
 }

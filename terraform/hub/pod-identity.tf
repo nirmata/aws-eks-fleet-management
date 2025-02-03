@@ -28,50 +28,50 @@ module "external_secrets_pod_identity" {
 ################################################################################
 # CloudWatch Observability
 ################################################################################
-module "aws_cloudwatch_observability_pod_identity" {
-  source = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "~> 1.4.0"
+# module "aws_cloudwatch_observability_pod_identity" {
+#   source = "terraform-aws-modules/eks-pod-identity/aws"
+#   version = "~> 1.4.0"
 
-  name = "aws-cloudwatch-observability"
+#   name = "aws-cloudwatch-observability"
 
-  attach_aws_cloudwatch_observability_policy = true
+#   attach_aws_cloudwatch_observability_policy = true
 
-  # Pod Identity Associations
-  associations = {
-    addon = {
-      cluster_name = module.eks.cluster_name
-      namespace       = "amazon-cloudwatch"
-      service_account = "cloudwatch-agent"
-    }
-  }
+#   # Pod Identity Associations
+#   associations = {
+#     addon = {
+#       cluster_name = module.eks.cluster_name
+#       namespace       = "amazon-cloudwatch"
+#       service_account = "cloudwatch-agent"
+#     }
+#   }
 
-  tags = local.tags
-}
+#   tags = local.tags
+# }
 
 ################################################################################
 # Kyverno Policy Reporter SecurityHub Access
 ################################################################################
-module "kyverno_policy_reporter_pod_identity" {
-  source = "terraform-aws-modules/eks-pod-identity/aws"
-  version = "~> 1.4.0"
+# module "kyverno_policy_reporter_pod_identity" {
+#   source = "terraform-aws-modules/eks-pod-identity/aws"
+#   version = "~> 1.4.0"
 
-  name = "kyverno-policy-reporter"
+#   name = "kyverno-policy-reporter"
 
-  additional_policy_arns = {
-    AWSSecurityHub = "arn:aws:iam::aws:policy/AWSSecurityHubFullAccess"
-  }
+#   additional_policy_arns = {
+#     AWSSecurityHub = "arn:aws:iam::aws:policy/AWSSecurityHubFullAccess"
+#   }
 
-  # Pod Identity Associations
-  associations = {
-    addon = {
-      cluster_name = module.eks.cluster_name
-      namespace       = "kyverno"
-      service_account = "policy-reporter"
-    }
-  }
+#   # Pod Identity Associations
+#   associations = {
+#     addon = {
+#       cluster_name = module.eks.cluster_name
+#       namespace       = "kyverno"
+#       service_account = "policy-reporter"
+#     }
+#   }
 
-  tags = local.tags
-}
+#   tags = local.tags
+# }
 
 ################################################################################
 # EBS CSI EKS Access
@@ -125,27 +125,27 @@ module "aws_lb_controller_pod_identity" {
 # Karpenter EKS Access
 ################################################################################
 
-module "karpenter" {
-  source  = "terraform-aws-modules/eks/aws//modules/karpenter"
-  version = "~> 20.23.0"
+# module "karpenter" {
+#   source  = "terraform-aws-modules/eks/aws//modules/karpenter"
+#   version = "~> 20.23.0"
 
-  cluster_name = module.eks.cluster_name
+#   cluster_name = module.eks.cluster_name
 
-  enable_pod_identity             = true
-  create_pod_identity_association = true
+#   enable_pod_identity             = true
+#   create_pod_identity_association = true
 
-  namespace = local.karpenter.namespace
-  service_account = local.karpenter.service_account
+#   namespace = local.karpenter.namespace
+#   service_account = local.karpenter.service_account
 
-  # Used to attach additional IAM policies to the Karpenter node IAM role
-  # Adding IAM policy needed for fluentbit
-  node_iam_role_additional_policies = {
-    AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
-    CloudWatchAgentServerPolicy = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
-  }
+#   # Used to attach additional IAM policies to the Karpenter node IAM role
+#   # Adding IAM policy needed for fluentbit
+#   node_iam_role_additional_policies = {
+#     AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+#     CloudWatchAgentServerPolicy = "arn:aws:iam::aws:policy/CloudWatchAgentServerPolicy"
+#   }
 
-  tags = local.tags
-}
+#   tags = local.tags
+# }
 ################################################################################
 # ArgoCD EKS Pod Identity Association
 ################################################################################
