@@ -10,6 +10,8 @@ addons:
     enabled: false
   kyverno:
     enabled: true
+  kyverno_policies:
+    enabled: true
   nirmata_cluster_registrator:
     enabled: true
   external_secrets:
