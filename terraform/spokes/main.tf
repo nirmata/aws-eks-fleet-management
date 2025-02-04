@@ -28,6 +28,24 @@ data "aws_ssm_parameter" "frontend_team_view_role" {
   name  = "${local.context_prefix}-${var.frontend_team_view_role_suffix}"
 }
 
+data "aws_secretsmanager_secret" "nirmata_secret" {
+  name = var.secret_name_nirmata_api_token
+}
+data "aws_secretsmanager_secret_version" "nirmata_secret_version" {
+  secret_id = data.aws_secretsmanager_secret.nirmata_secret.id
+}
+
+provider "kubernetes" {
+  host                   = module.eks.cluster_endpoint
+  cluster_ca_certificate = base64decode(module.eks.cluster_certificate_authority_data)
+
+  exec {
+    api_version = "client.authentication.k8s.io/v1beta1"
+    command     = "aws"
+    # This requires the awscli to be installed locally where Terraform is executed
+    args = ["eks", "get-token", "--cluster-name", module.eks.cluster_name, "--region", local.region]
+  }
+}
 
 locals {
   context_prefix = var.project_context_prefix
@@ -39,6 +57,9 @@ locals {
   argocd_namespace    = "argocd"
   adot_collector_namespace = "adot-collector-kubeprometheus"
   adot_collector_serviceaccount = "adot-collector-kubeprometheus"
+  nirmata_namespace = "nirmata"
+  nirmata_api_token_secret_key = var.secret_name_nirmata_api_token
+  nirmata_api_token = data.aws_secretsmanager_secret_version.nirmata_secret_version.secret_string
 
   external_secrets = {
     namespace             = "external-secrets"
@@ -127,8 +148,8 @@ locals {
     {
       karpenter_namespace = local.karpenter.namespace
       karpenter_service_account = local.karpenter.service_account
-      karpenter_node_iam_role_name = module.karpenter.node_iam_role_name
-      karpenter_sqs_queue_name = module.karpenter.queue_name
+      # karpenter_node_iam_role_name = module.karpenter.node_iam_role_name
+      # karpenter_sqs_queue_name = module.karpenter.queue_name
     },
     {
       external_secrets_namespace = local.external_secrets.namespace
@@ -142,9 +163,9 @@ locals {
     },
     {
       # Opensource monitoring
-      amp_endpoint_url = "${data.aws_ssm_parameter.amp_endpoint.value}"
-      adot_collector_namespace = local.adot_collector_namespace
-      adot_collector_serviceaccount = local.adot_collector_serviceaccount
+      # amp_endpoint_url = "${data.aws_ssm_parameter.amp_endpoint.value}"
+      # adot_collector_namespace = local.adot_collector_namespace
+      # adot_collector_serviceaccount = local.adot_collector_serviceaccount
     }
   )
 
@@ -155,6 +176,7 @@ locals {
 }
 
 data "aws_ssm_parameter" "amp_endpoint" {
+  count = var.enable_prometheus ? 1 : 0
   name = "${local.context_prefix}-${var.amazon_managed_prometheus_suffix}-endpoint"
 }
 
@@ -299,7 +321,7 @@ module "eks" {
       }
 
       min_size     = 2
-      max_size     = 6
+      max_size     = 4
       desired_size = 2
 
       taints = local.aws_addons.enable_karpenter ? {
@@ -365,7 +387,28 @@ module "eks" {
   })
   tags = local.tags
 }
+################################################################################
+# Nirmata Secret creation
+################################################################################
+# resource "kubernetes_namespace" "nirmata" {
+#   depends_on = [module.eks]
+#   metadata {
+#     name = local.nirmata_namespace
+#   }
+# }
 
+resource "kubernetes_secret" "nirmata_secret" {
+  # depends_on = [kubernetes_namespace.nirmata]
+  metadata {
+    name = "nirmata-api-token"
+    namespace = local.nirmata_namespace
+  }
+
+  data = {
+    "apiKey" = local.nirmata_api_token
+  }
+
+}
 
 ################################################################################
 # Supporting Resources
