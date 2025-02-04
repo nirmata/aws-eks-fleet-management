@@ -217,20 +217,21 @@ data "aws_ssm_parameter" "amp_endpoint" {
 ################################################################################
 # GitOps Bridge: Private ssh keys for git
 ################################################################################
-# resource "kubernetes_namespace" "argocd" {
-#   depends_on = [module.eks]
-#   metadata {
-#     name = local.argocd_namespace
-#   }
-# }
-# resource "kubernetes_namespace" "nirmata" {
-#   depends_on = [module.eks]
-#   metadata {
-#     name = local.nirmata_namespace
-#   }
-# }
+resource "kubernetes_namespace" "argocd" {
+  depends_on = [module.eks]
+  metadata {
+    name = local.argocd_namespace
+  }
+}
+
+resource "kubernetes_namespace" "nirmata" {
+  depends_on = [module.eks]
+  metadata {
+    name = local.nirmata_namespace
+  }
+}
 resource "kubernetes_secret" "git_secrets" {
-  # depends_on = [kubernetes_namespace.argocd,kubernetes_namespace.nirmata]
+  depends_on = [kubernetes_namespace.argocd]
   for_each = {
     git-addons = {
       type                  = "git"
@@ -267,7 +268,7 @@ resource "kubernetes_secret" "git_secrets" {
   data = each.value
 }
 resource "kubernetes_secret" "nirmata_secret" {
-  # depends_on = [kubernetes_namespace.nirmata]
+  depends_on = [kubernetes_namespace.nirmata]
   metadata {
     name = "nirmata-api-token"
     namespace = "nirmata"

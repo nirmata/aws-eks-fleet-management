@@ -17,11 +17,11 @@ variable "gitops_fleet_repo_name" {
 }
 variable "gitops_fleet_basepath" {
   description = "Git repository base path for fleet"
-  default     = "gitops/"
+  default     = "gitops/fleet/"
 }
 variable "gitops_fleet_path" {
   description = "Git repository path for fleet"
-  default     = "fleet"
+  default     = "bootstrap"
 }
 variable "gitops_fleet_revision" {
   description = "Git repository revision/branch/ref for fleet"
@@ -51,11 +51,11 @@ variable "gitops_platform_repo_name" {
 }
 variable "gitops_platform_basepath" {
   description = "Git repository base path for platform"
-  default     = "gitops"
+  default     = "gitops/platform/"
 }
 variable "gitops_platform_path" {
   description = "Git repository path for workload"
-  default     = "platform"
+  default     = "bootstrap"
 }
 variable "gitops_platform_revision" {
   description = "Git repository revision/branch/ref for workload"
@@ -69,11 +69,11 @@ variable "gitops_workload_repo_name" {
 }
 variable "gitops_workload_basepath" {
   description = "Git repository base path for workload"
-  default     = "gitops"
+  default     = "gitops/apps"
 }
 variable "gitops_workload_path" {
   description = "Git repository path for workload"
-  default     = "apps"
+  default     = ""
 }
 variable "gitops_workload_revision" {
   description = "Git repository revision/branch/ref for workload"
