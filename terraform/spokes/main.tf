@@ -390,15 +390,15 @@ module "eks" {
 ################################################################################
 # Nirmata Secret creation
 ################################################################################
-# resource "kubernetes_namespace" "nirmata" {
-#   depends_on = [module.eks]
-#   metadata {
-#     name = local.nirmata_namespace
-#   }
-# }
+resource "kubernetes_namespace" "nirmata" {
+  depends_on = [module.eks]
+  metadata {
+    name = local.nirmata_namespace
+  }
+}
 
 resource "kubernetes_secret" "nirmata_secret" {
-  # depends_on = [kubernetes_namespace.nirmata]
+  depends_on = [kubernetes_namespace.nirmata]
   metadata {
     name = "nirmata-api-token"
     namespace = local.nirmata_namespace
