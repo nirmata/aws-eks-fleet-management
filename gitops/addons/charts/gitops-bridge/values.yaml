@@ -822,6 +822,19 @@ addons:
         - key: enable_kyverno
           operator: In
           values: ['true']
+    values:
+      config:
+        resourceFiltersExcludeNamespaces:
+          - amazon-cloudwatch
+          - kube-prometheus-stack
+          - kube-system
+          - argocd
+          - nirmata
+          - kyverno
+          - external-secrets
+      features:
+        backgroundScan:
+          skipResourceFilters: false
     resources:
       path: gitops/addons/charts/resources/kyverno
       helm:
