@@ -829,9 +829,6 @@ addons:
           - kube-prometheus-stack
           - kube-system
           - argocd
-          - nirmata
-          - kyverno
-          - external-secrets
       features:
         backgroundScan:
           skipResourceFilters: false
