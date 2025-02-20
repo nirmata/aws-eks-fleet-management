@@ -53,6 +53,7 @@ locals {
   vpc_cidr        = var.vpc_cidr
   azs             = slice(data.aws_availability_zones.available.names, 0, 2)
   argocd_namespace    = "argocd"
+  nirmata_namespace = "nirmata"
   adot_collector_namespace = "adot-collector-kubeprometheus"
   adot_collector_serviceaccount = "adot-collector-kubeprometheus"
 
@@ -117,6 +118,7 @@ locals {
     enable_prometheus_adapter              = try(var.addons.enable_prometheus_adapter, false)
     enable_secrets_store_csi_driver        = try(var.addons.enable_secrets_store_csi_driver, false)
     enable_vpa                             = try(var.addons.enable_vpa, false)
+    enable_nirmata_cluster_registrator     = try(var.addons.enable_nirmata_cluster_registrator, false)
   }
   addons = merge(
     #
@@ -172,12 +174,12 @@ locals {
       workload_repo_revision = local.gitops_workload_revision
       workload_repo_secret_key = local.gitops_workload_repo_secret_key
     },
-    {
-      karpenter_namespace = local.karpenter.namespace
-      karpenter_service_account = local.karpenter.service_account
-      karpenter_node_iam_role_name = module.karpenter.node_iam_role_name
-      karpenter_sqs_queue_name = module.karpenter.queue_name
-    },
+    # {
+    #   karpenter_namespace = local.karpenter.namespace
+    #   karpenter_service_account = local.karpenter.service_account
+    #   karpenter_node_iam_role_name = module.karpenter.node_iam_role_name
+    #   karpenter_sqs_queue_name = module.karpenter.queue_name
+    # },
     {
       external_secrets_namespace = local.external_secrets.namespace
       external_secrets_service_account = local.external_secrets.service_account
@@ -188,9 +190,9 @@ locals {
     },
     {
       # Opensource monitoring
-      amp_endpoint_url = "${data.aws_ssm_parameter.amp_endpoint.value}"
-      adot_collector_namespace = local.adot_collector_namespace
-      adot_collector_serviceaccount = local.adot_collector_serviceaccount
+      # amp_endpoint_url = "${data.aws_ssm_parameter.amp_endpoint[0].value}"
+      # adot_collector_namespace = local.adot_collector_namespace
+      # adot_collector_serviceaccount = local.adot_collector_serviceaccount
     }
   )
 
@@ -207,6 +209,7 @@ locals {
 }
 
 data "aws_ssm_parameter" "amp_endpoint" {
+  count = var.enable_prometheus ? 1 : 0
   name = "${local.context_prefix}-${var.amazon_managed_prometheus_suffix}-endpoint"
 }
 
@@ -218,6 +221,13 @@ resource "kubernetes_namespace" "argocd" {
   depends_on = [module.eks]
   metadata {
     name = local.argocd_namespace
+  }
+}
+
+resource "kubernetes_namespace" "nirmata" {
+  depends_on = [module.eks]
+  metadata {
+    name = local.nirmata_namespace
   }
 }
 resource "kubernetes_secret" "git_secrets" {
@@ -250,12 +260,24 @@ resource "kubernetes_secret" "git_secrets" {
   }
   metadata {
     name      = each.key
-    namespace = kubernetes_namespace.argocd.metadata[0].name
+    namespace = "argocd"
     labels = {
       "argocd.argoproj.io/secret-type" = "repository"
     }
   }
   data = each.value
+}
+resource "kubernetes_secret" "nirmata_secret" {
+  depends_on = [kubernetes_namespace.nirmata]
+  metadata {
+    name = "nirmata-api-token"
+    namespace = "nirmata"
+  }
+
+  data = {
+    "apiKey" = local.nirmata_api_token
+  }
+
 }
 ################################################################################
 # GitOps Bridge: Bootstrap
@@ -279,7 +301,7 @@ module "gitops_bridge_bootstrap" {
     timeout          = 600
     create_namespace = false
   }
-  depends_on = [kubernetes_secret.git_secrets]
+  depends_on = [kubernetes_secret.git_secrets,kubernetes_secret.nirmata_secret]
 }
 
 ################################################################################
@@ -354,7 +376,7 @@ module "eks" {
       }
 
       min_size     = 2
-      max_size     = 6
+      max_size     = 4
       desired_size = 2
       taints = local.aws_addons.enable_karpenter ? {
         dedicated = {

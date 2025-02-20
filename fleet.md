@@ -4,14 +4,22 @@ For each fleet member EKS cluster, we will deploy a Helm chart called "Fleet Mem
 
 ## Step 0: Initial Setup
 
-- Create a CodeCommit Git repository.
-- Create an AWS Secrets Manager key with Git SSH keys that rotate every 90 days.
-- Create the Hub cluster.
+- Create a CodeCommit Git repository. (For this workshop  we are going to keep a single repository)
+  - To use github repos need to set the following variables
+  - export TF_VAR_create_github_repos=true
+  - export TF_VAR_gitea_external_url=https://github.com
+  - export TF_VAR_gitea_repo_prefix="$GITHUB_USERNAME_OR_ORG/"
+  - export TF_VAR_gitea_user=$GITHUB_USERNAME
+  - export TF_VAR_gitea_password=$GITHUB_TOKEN
+  - export TF_VAR_nirmata_api_token=$NIRMATA_API_TOKEN
+  - export AWS_PROFILE=$PROFILE
+- Create an AWS Secrets Manager key with Git SSH keys that rotate every 90 days. Run deploy.sh file inside the ./terraform/common/
+- Create the Hub cluster. Run deploy.sh file inside the ./terraform/hub
 - Bootstrap the Hub cluster with the `gitops-bridge-addons` Helm chart.
 
 ## Step 1: EKS Cluster Creation and Secret Setup
 
-- For each fleet member, an EKS cluster is created using Infrastructure as Code (IaC) tools such as Terraform (TF), AWS Controllers for Kubernetes (ACK), or Cluster API (CAPI).
+- For each fleet member, an EKS cluster is created using Infrastructure as Code (IaC) tools such as Terraform (TF), AWS Controllers for Kubernetes (ACK), or Cluster API (CAPI). to create the fleet member run deploy.sh file under ./terraform/spokes/
 - The IaC process will create an AWS Secrets Manager key containing the cluster information for the Spoke cluster.
 - The Hub cluster will be created with ArgoCD deployed via IaC, which is necessary to bootstrap the External Secrets Operator to prepare for the spoke registration process.
 

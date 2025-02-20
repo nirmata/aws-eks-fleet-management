@@ -20,10 +20,10 @@ stackPath: 'addons-{{- $tenant := default dict (index .tenants .metadata.labels.
 stackPathConfigPrefix: 'k8s-v'
 stackPathConfig: 'addons-config.yaml'
 repoURLGit: "'{{.metadata.annotations.addons_repo_url}}'"
-repoURLGitRevision: HEAD
+repoURLGitRevision: feature/rev1
 repoURLGitBasePath: "stacks/"
 repoURLValues: "'{{.metadata.annotations.addons_repo_url}}'"
-repoURLValuesRevision: HEAD
+repoURLValuesRevision: feature/rev1
 repoURLValuesBasePath: ""
 project: default
 namespace: argocd
@@ -809,23 +809,54 @@ addons:
         - key: enable_adot_collector
           operator: In
           values: ['true']
+
   kyverno:
     enabled: false
     releaseName: kyverno
     namespace: '{{default "kyverno" (index .metadata.annotations "kyverno_namespace")}}'
     chart: kyverno
-    repoUrl: https://kyverno.github.io/kyverno
-    targetRevision: "3.2.6"
+    repoUrl: https://nirmata.github.io/kyverno-charts
+    targetRevision: "3.2.9"   #for N4K -> v1.12.6 Kyverno version
     selector:
       matchExpressions:
         - key: enable_kyverno
           operator: In
           values: ['true']
+    values:
+      config:
+        resourceFiltersExcludeNamespaces:
+          - amazon-cloudwatch
+          - kube-prometheus-stack
+          - kube-system
+          - argocd
+          - nirmata
+          - kyverno
+          - external-secrets
+      features:
+        backgroundScan:
+          skipResourceFilters: false
     resources:
-      path: charts/resources/kyverno
+      path: gitops/addons/charts/resources/kyverno
       helm:
         valuesObject:
           environment: '{{.metadata.labels.environment}}'
+
+  nirmata_cluster_registrator:
+    enabled: false
+    releaseName: cluster-registator
+    namespace: 'nirmata'
+    chart: cluster-registrator
+    repoUrl: https://nirmata.github.io/kyverno-charts
+    targetRevision: "0.1.16"   #for N4K -> v1.12.6 Kyverno version
+    selector:
+      matchExpressions:
+        - key: enable_kyverno
+          operator: In
+          values: ['true']
+    values:
+      cluster:
+        name: '{{.metadata.annotations.aws_cluster_name}}'
+      apiTokenSecret: nirmata-api-token
 
 
   kyverno_policy_reporter:

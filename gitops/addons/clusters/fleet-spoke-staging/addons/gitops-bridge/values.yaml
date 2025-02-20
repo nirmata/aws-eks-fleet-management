@@ -7,17 +7,19 @@ addons:
   metrics_server:
     enabled: true
   karpenter:
-    enabled: true
+    enabled: false
   kyverno:
     enabled: true
   kyverno_policies:
     enabled: true
-  kyverno_policy_reporter:
+  nirmata_cluster_registrator:
     enabled: true
+  kyverno_policy_reporter:
+    enabled: false
   cni_metrics_helper:
     enabled: true
   cw_prometheus:
-    enabled: true
+    enabled: false
   prometheus_node_exporter:
     enabled: true
   kube_state_metrics:
@@ -27,8 +29,8 @@ addons:
   external_secrets:
     enabled: false # Disabled because is not deployed by the gitops-bridge helm chart and instead is deployed by the fleet-spoke-external-secrets ApplicationSet the Hub Cluster https://github.com/aws-samples/fleet-management-on-amazon-eks-workshop/blob/riv24/gitops/fleet/bootstrap/control-plane/members-init/addons-aws-oss-external-secrets-appset.yaml
   adot_collector:
-    enabled: true
+    enabled: false
   opentelemetry_operator:
-    enabled: true
+    enabled: false
   cert_manager:
-    enabled: true
+    enabled: false

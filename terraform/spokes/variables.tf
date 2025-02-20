@@ -15,12 +15,19 @@ variable "addons" {
   default = {
     enable_aws_load_balancer_controller = true
     enable_metrics_server               = true
-    enable_karpenter                    = true
-    enable_cw_prometheus                = true
+    enable_karpenter                    = false
+    enable_cw_prometheus                = false
     enable_kyverno                      = true
-    enable_kyverno_policy_reporter      = true
+    enable_kyverno_policy_reporter      = false
     enable_kyverno_policies             = true
+    enable_nirmata_cluster_registrator  = true
   }
+}
+
+variable "secret_name_nirmata_api_token" {
+  description = "Secret name for Nirmata API token"
+  type        = string
+  default     = "eks-fleet-gitops-nirmata-api-token"
 }
 
 variable "kms_key_admin_roles" {
@@ -33,7 +40,7 @@ variable "kms_key_admin_roles" {
 variable "project_context_prefix" {
   description = "Prefix for project"
   type        = string
-  default     = "eks-fleet-workshop-gitops"
+  default     = "eks-fleet-gitops"
 }
 
 variable "ssm_parameter_name_argocd_role_suffix" {
@@ -61,6 +68,29 @@ variable "frontend_team_view_role_suffix" {
 
 variable "enable_prometheus_scraper" {
   description = "Enable Prometheus Scraper"
+  type        = bool
+  default     = false
+}
+variable "enable_cloudwatch_dashboards" {
+  description = "Enable CloudWatch Dashboards"
+  type        = bool
+  default     = false
+}
+
+variable "enable_notifications" {
+  description = "Enable SNS Notifications"
+  type        = bool
+  default     = false
+}
+
+variable "enable_adot" {
+  description = "Enable adot collector"
+  type        = bool
+  default     = false
+}
+
+variable "enable_prometheus" {
+  description = "Enable aws managed prometheus"
   type        = bool
   default     = false
 }

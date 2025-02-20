@@ -4,6 +4,7 @@
 # export TF_VAR_gitea_repo_prefix="$GITHUB_USERNAME_OR_ORG/"
 # export TF_VAR_gitea_user=$GITHUB_USERNAME
 # export TF_VAR_gitea_password=$GITHUB_TOKEN
+# export TF_VAR_nirmata_api_token=$NIRMATA_API_TOKEN
 
 
 

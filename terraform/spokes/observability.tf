@@ -5,6 +5,7 @@ locals{
 }
 
 data "aws_ssm_parameter" "amp_arn" {
+  count = var.enable_prometheus ? 1 : 0
   name = "${local.context_prefix}-${var.amazon_managed_prometheus_suffix}-arn"
 }
 
@@ -20,7 +21,7 @@ resource "aws_prometheus_scraper" "fleet-scraper" {
   }
   destination {
     amp {
-       workspace_arn = data.aws_ssm_parameter.amp_arn.value
+       workspace_arn = data.aws_ssm_parameter.amp_arn[0].value
     }
   }
   alias = "fleet-hub"
@@ -56,6 +57,7 @@ resource "aws_prometheus_scraper" "fleet-scraper" {
 
 
 module "adot_collector_pod_identity" {
+  count = var.enable_adot ? 1 : 0
   source = "terraform-aws-modules/eks-pod-identity/aws"
   version = "~> 1.4.0"
 

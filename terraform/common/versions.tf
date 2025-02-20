@@ -13,9 +13,10 @@ terraform {
   }
 
   # ##  Used for end-to-end testing on project; update to suit your needs
-  # backend "s3" {
-  #   bucket = "terraform-state-duektsah"
-  #   region = "eu-west-1"
-  #   key    = "argocd-on-amazon-eks-workshop/codecommit"
-  # }
+  backend "s3" {
+    bucket = "eks-fleet-gitops-state-2"
+    region = "us-west-2"
+    key    = "eks-fleet-gitops/common"
+    profile = "mgmt_account"
+  }
 }

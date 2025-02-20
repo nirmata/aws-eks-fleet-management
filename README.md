@@ -1,20 +1,21 @@
-## Amazon EKS Fleet Management Workshop - ReInvent KUB303
+## This is a parmanent fork of original Amazon EKS Fleet Management Workshop - ReInvent KUB303
 
-Elevate your Amazon EKS skills with this hands-on workshop designed for experienced builders. Learn to create a unified internal developer platform for Amazon EKS clusters across environments using GitOps principles. Master multi-cluster resource configuration, drift detection, and lifecycle management while ensuring compliance and security. Gain practical skills in implementing platform engineering for consistent resource states, enforcing policies across clusters, and centralizing logging, metrics, monitoring, and access control. Equip yourself with cutting-edge strategies to efficiently manage and secure your Amazon EKS fleet at scale.
+## Changes from the original upstream
+
+In this forked project we have switched off the ingerations of certain AWS services like managed prometheus, Security Hub, Cloudwatch Dashboards, Kyverno policy reporter and added new capabilities like integration of Nirmata Control Hub via cluster registrator and Enterprise Kyverno (N4K).
+
 
 ## Learnings:
 
 * Fleet Provisioning: Infrastructure as Code to deploy EKS clusters
 * Fleet Management: GitOps to Kubernetes resources (helm addons)
-* Fleet Monitoring: Cloudwatch EKS clusters
 * Fleet Governance: Policy across EKS clusters
-* Fleet Quicksight Dashboard View
+* Fleet Governance Dashboard: Nirmata Control Hub for central visibility.
 
 ## Getting Started
 
-Please work with your Account Manager to setup and deploy this workshop at an AWS event, or use it on your own AWS account.
+Please follow the instructions given in the fleet.md to use it on your own AWS account.
 
-Workshop Url: https://catalog.workshops.aws/eks-fleet-management/en-US
 
 ## Use Cases
 
