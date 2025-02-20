@@ -12,6 +12,7 @@ For each fleet member EKS cluster, we will deploy a Helm chart called "Fleet Mem
   - export TF_VAR_gitea_user=$GITHUB_USERNAME
   - export TF_VAR_gitea_password=$GITHUB_TOKEN
   - export TF_VAR_nirmata_api_token=$NIRMATA_API_TOKEN
+  - export AWS_PROFILE=$PROFILE
 - Create an AWS Secrets Manager key with Git SSH keys that rotate every 90 days. Run deploy.sh file inside the ./terraform/common/
 - Create the Hub cluster. Run deploy.sh file inside the ./terraform/hub
 - Bootstrap the Hub cluster with the `gitops-bridge-addons` Helm chart.
