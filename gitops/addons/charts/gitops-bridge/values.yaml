@@ -824,14 +824,11 @@ addons:
           values: ['true']
     values:
       config:
-        resourceFiltersExcludeNamespaces:
+        resourceFiltersIncludeNamespaces:
           - amazon-cloudwatch
           - kube-prometheus-stack
           - kube-system
           - argocd
-          - nirmata
-          - kyverno
-          - external-secrets
       features:
         backgroundScan:
           skipResourceFilters: false
