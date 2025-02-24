@@ -366,8 +366,8 @@ module "eks" {
 
   eks_managed_node_groups = {
     "${local.name}" = {
-      ami_type = "BOTTLEROCKET_x86_64"
-      instance_types = ["m5.large"]
+      ami_type = "BOTTLEROCKET_ARM_64"
+      instance_types = ["t4g.large"]
 
       # Attach additional IAM policies to the Karpenter node IAM role
       # Adding IAM policy needed for fluentbit
