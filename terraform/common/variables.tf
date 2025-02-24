@@ -25,7 +25,7 @@ variable "gitops_fleet_path" {
 }
 variable "gitops_fleet_revision" {
   description = "Git repository revision/branch/ref for fleet"
-  default     = "feature/rev1"
+  default     = "feature/nirmata-addon"
 }
 
 variable "gitops_addons_repo_name" {
@@ -42,7 +42,7 @@ variable "gitops_addons_path" {
 }
 variable "gitops_addons_revision" {
   description = "Git repository revision/branch/ref for addons"
-  default     = "feature/rev1"
+  default     = "feature/nirmata-addon"
 }
 
 variable "gitops_platform_repo_name" {
@@ -59,7 +59,7 @@ variable "gitops_platform_path" {
 }
 variable "gitops_platform_revision" {
   description = "Git repository revision/branch/ref for workload"
-  default     = "feature/rev1"
+  default     = "feature/nirmata-addon"
 }
 
 
@@ -77,7 +77,7 @@ variable "gitops_workload_path" {
 }
 variable "gitops_workload_revision" {
   description = "Git repository revision/branch/ref for workload"
-  default     = "feature/rev1"
+  default     = "feature/nirmata-addon"
 }
 
 variable "ssm_parameter_name_argocd_role_suffix" {

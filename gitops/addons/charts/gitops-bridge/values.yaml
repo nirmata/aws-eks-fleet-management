@@ -20,10 +20,10 @@ stackPath: 'addons-{{- $tenant := default dict (index .tenants .metadata.labels.
 stackPathConfigPrefix: 'k8s-v'
 stackPathConfig: 'addons-config.yaml'
 repoURLGit: "'{{.metadata.annotations.addons_repo_url}}'"
-repoURLGitRevision: feature/rev1
+repoURLGitRevision: feature/nirmata-addon
 repoURLGitBasePath: "stacks/"
 repoURLValues: "'{{.metadata.annotations.addons_repo_url}}'"
-repoURLValuesRevision: feature/rev1
+repoURLValuesRevision: feature/nirmata-addon
 repoURLValuesBasePath: ""
 project: default
 namespace: argocd

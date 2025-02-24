@@ -76,6 +76,7 @@ locals {
     enable_aws_fsx_csi_driver                    = try(var.addons.enable_aws_fsx_csi_driver, false)
     enable_aws_cloudwatch_metrics                = try(var.addons.enable_aws_cloudwatch_metrics, false)
     enable_aws_privateca_issuer                  = try(var.addons.enable_aws_privateca_issuer, false)
+    enable_nirmata_kyverno                       = try(var.addon.enable_nirmata_kyverno, false)
     enable_cluster_autoscaler                    = try(var.addons.enable_cluster_autoscaler, false)
     enable_external_dns                          = try(var.addons.enable_external_dns, false)
     enable_external_secrets                      = try(var.addons.enable_external_secrets, false)
@@ -401,6 +402,9 @@ module "eks" {
     }
     aws-ebs-csi-driver = {
       addon_version  = "v1.36.0-eksbuild.1"
+    }
+    nirmata_kyverno = {
+      addon_version  = "v1.13.2-eksbuild.1"
     }
     eks-pod-identity-agent = {
       addon_version  = "v1.3.2-eksbuild.2"

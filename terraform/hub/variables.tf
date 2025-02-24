@@ -25,8 +25,9 @@ variable "addons" {
     enable_metrics_server               = true
     enable_external_secrets             = true
     enable_argocd                       = true
-    enable_kyverno                      = true
-    enable_kyverno_policy_reporter      = true
+    enable_kyverno                      = false
+    enable_nirmata_kyverno              = true
+    enable_kyverno_policy_reporter      = false
     enable_kyverno_policies             = true
     enable_nirmata_cluster-regestrator  = true
     enable_karpenter                    = false

@@ -9,7 +9,7 @@ addons:
   karpenter:
     enabled: false
   kyverno:
-    enabled: true
+    enabled: false
   kyverno_policies:
     enabled: true
   nirmata_cluster_registrator:
