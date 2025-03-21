@@ -403,7 +403,7 @@ module "eks" {
     aws-ebs-csi-driver = {
       addon_version  = "v1.36.0-eksbuild.1"
     }
-    nirmata_add-on-name-nirmata = {
+    nirmata_kyverno = {
       addon_version  = "v1.13.2-eksbuild.1"
     }
     eks-pod-identity-agent = {
